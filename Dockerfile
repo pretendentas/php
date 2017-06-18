@@ -3,6 +3,7 @@ LABEL maintainer "karolis@pretendentas.lt"
 
 RUN set -ex \
     && apt-get update && apt-get install -y \
+        cron \
         git \
         libbz2-dev \
         libgmp-dev \
@@ -27,7 +28,6 @@ RUN set -ex \
         bcmath \
         bz2 \
         calendar \
-        cron \
         exif \
         gd \
         gettext \
