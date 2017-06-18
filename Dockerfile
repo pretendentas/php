@@ -27,6 +27,7 @@ RUN set -ex \
         bcmath \
         bz2 \
         calendar \
+        cron \
         exif \
         gd \
         gettext \
