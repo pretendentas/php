@@ -78,12 +78,13 @@ RUN set -ex \
 
 
 VOLUME /var/www/html
-VOLUME /var/www/html/tmp
-VOLUME /var/www/html/log
-VOLUME /var/www/html/export
 WORKDIR /var/www/html
 
 EXPOSE 9000
+
+RUN set -x \
+    addgroup -g 82 -S www-data \
+    adduser -u 82 -D -S -G www-data www-data && exit 0
 
 COPY init.sh /init.sh
 COPY docker-entrypoint.sh /docker-entrypoint.sh
