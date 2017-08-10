@@ -49,6 +49,10 @@ RUN set -ex \
         xsl \
         zip
 
+  RUN set -ex \
+    && pecl install xdebug-2.5.5 \
+    && docker-php-ext-enable xdebug
+
 RUN set -ex \
     && mkdir -p /var/lib/php/session \
     && mkdir -p /var/lib/php/wsdlcache \
