@@ -2,52 +2,65 @@ FROM php:5.6-fpm
 LABEL maintainer "karolis@pretendentas.lt"
 
 RUN set -ex \
-    && apt-get update && apt-get install -y \
+    && apt-get update
+    
+RUN set -ex \
+    && apt-get install -y \
         cron \
+        g++ \
         git \
         libbz2-dev \
-        libgmp-dev \
+        libicu-dev \
         libjpeg-dev \
         libmcrypt-dev \
         libpng12-dev \
+        libpq-dev \
         libxml2-dev \
         libxslt-dev \
-        libtidy-dev \
         zip \
+        zlib1g-dev \
     && rm -rf /var/lib/apt/lists/*
 
 RUN set -ex \
-    && ln -s /usr/include/x86_64-linux-gnu/gmp.h /usr/include/gmp.h \
-    && docker-php-ext-configure gd --with-png-dir=/usr/ --with-jpeg-dir=/usr/ \
-    && docker-php-ext-configure pdo_mysql --with-pdo-mysql=mysqlnd \
+    && docker-php-ext-configure gd --with-png-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+    && docker-php-ext-configure hash --with-mhash \
+    && docker-php-ext-configure intl \
     && docker-php-ext-configure mysql --with-mysql=mysqlnd \
-    && docker-php-ext-configure mysqli --with-mysqli=mysqlnd
+    && docker-php-ext-configure mysqli --with-mysqli=mysqlnd \
+    && docker-php-ext-configure pdo_mysql --with-pdo-mysql=mysqlnd \
+    && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
     
 RUN set -ex \
     && docker-php-ext-install -j$(nproc) \
         bcmath \
         bz2 \
         calendar \
+        dba \
         exif \
         gd \
         gettext \
-        gmp \
+        intl \
         mcrypt \
         mysql \
         mysqli \
         opcache \
-        pcntl \
         pdo_mysql \
+        pdo_pgsql \
+        pgsql \
         shmop \
         soap \
         sockets \
         sysvmsg \
         sysvsem \
         sysvshm \
-        tidy \
         wddx \
+        xmlrpc \
         xsl \
         zip
+
+RUN set -ex \
+    && pecl install redis-3.1.0 \
+    && docker-php-ext-enable redis
 
 RUN set -ex \
     && mkdir -p /var/lib/php/session \
@@ -66,7 +79,12 @@ RUN set -ex \
 
 VOLUME /var/www/html
 WORKDIR /var/www/html
+
 EXPOSE 9000
+
+RUN set -x \
+    addgroup -g 82 -S www-data \
+    adduser -u 82 -D -S -G www-data www-data && exit 0
 
 COPY init.sh /init.sh
 COPY docker-entrypoint.sh /docker-entrypoint.sh

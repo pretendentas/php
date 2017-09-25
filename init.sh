@@ -10,6 +10,7 @@ if [ ! -f /var/www/html/config.inc.php ]; then
     cp /var/www/html/config.inc.php.dist /var/www/html/config.inc.php
 fi
 
+chown -R www-data:www-data .
 chmod -R 777 /var/www/html/tmp
 chmod -R 777 /var/www/html/log
 chmod -R 777 /var/www/html/export
