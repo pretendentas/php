@@ -59,8 +59,8 @@ RUN set -ex \
         zip
 
 RUN set -ex \
-    && pecl install redis-3.1.0 \
-    && docker-php-ext-enable redis
+    && pecl install redis-3.1.3 xdebug-2.5.5 \
+    && docker-php-ext-enable redis xdebug
 
 RUN set -ex \
     && mkdir -p /var/lib/php/session \
